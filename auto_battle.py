@@ -81,6 +81,10 @@ def whistle():
     head = response.get('response').get('head')
     if head.get('status') == 1:
         if head.get('message') == u'不在郊外':
+            # clear bag for next battle round
+            post_action(
+                'http://s1sky.gs.funmily.com/api/inventories/put_all_item_to_celler.json', data)
+            time.sleep(10)
             enter_area()
             return whistle()
         else:
