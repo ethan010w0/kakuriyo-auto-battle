@@ -1,5 +1,5 @@
 # kakuriyo-auto-battle
-An auto battle script for game Gate of Kakuriyo.
+An auto battle script for game kakuriyo-no-mon.
 
 # Usages
 * Set config in ```auto_battle.ini```.
