@@ -113,7 +113,7 @@ def run_move(move_info, channel, field_code, position):
     x, y = position
     ws = create_connection(move_host)
 
-    logger.info('make move {}, {}'.format(x, y))
+    logger.info('make_move {}, {}'.format(x, y))
     ws.send('{{"channel":"/meta/connect","clientId":"{}","connectionType":"websocket","id":"2"}}'.format(move_client_id))
     ws.send('{{"channel":"/field/{}-{}/command","data":{{"command_type":"move","cid":"{}","pid":4058,"info":{{"d8":{},"md":{},"cp":{{"x":{},"y":{}}}}}}},"clientId":"{}","id":"3"}}'.format(
         field_code, channel, client_id, x, y, x, y, move_client_id))
