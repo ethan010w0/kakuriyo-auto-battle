@@ -10,6 +10,7 @@ from battle_handlers import post_action
 from battle_handlers import run_battle
 from battle_handlers import whistle
 
+
 area_code = config.get('Area Battle', 'AreaCode')
 area_duration = config.getfloat('Area Battle', 'AreaDuration')
 round_times = config.get('Area Battle', 'RoundTimes')

@@ -8,6 +8,8 @@ from battle_handlers.area_battle_handler import area_battle
 from battle_handlers.sublimation_battle_handler import sublimation_battle
 
 
+logging.basicConfig(level=logging.INFO)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='An auto battle script for game kakuriyo-no-mon.')

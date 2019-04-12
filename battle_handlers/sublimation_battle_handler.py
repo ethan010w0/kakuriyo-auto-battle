@@ -4,7 +4,6 @@ import logging
 import sys
 import time
 
-
 from battle_handlers import config
 from battle_handlers import enemy_pop
 from battle_handlers import enter_area
@@ -17,8 +16,10 @@ from battle_handlers import run_battle
 from battle_handlers import run_move
 from battle_handlers import whistle
 
+
 logger = logging.getLogger(__name__)
 
+exchange_code = config.get('Sublimation Battle', 'ExchangeCode')
 area_code = config.get('Sublimation Battle', 'AreaCode')
 field_code = config.get('Sublimation Battle', 'FieldCode')
 round_enemy_code = config.get('Sublimation Battle', 'RoundEnemyCode')
@@ -30,10 +31,7 @@ round_enemy_position = (config.get('Sublimation Battle', 'RoundEnemyPositionX'),
                         config.get('Sublimation Battle', 'RoundEnemyPositionY'))
 
 channel = 1
-
 exchange_npc_id = 543
-exchange_code = 22101
-
 # 點的印章
 point_seal_id = 1913344
 # 圓的印章
