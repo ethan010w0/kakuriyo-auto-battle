@@ -5,6 +5,7 @@ import time
 from battle_handlers import config
 from battle_handlers import enter_area
 from battle_handlers import get_battle
+from battle_handlers import go_home
 from battle_handlers import is_at_town
 from battle_handlers import post_action
 from battle_handlers import run_battle
@@ -31,7 +32,7 @@ def area_battle():
             if not battle_info:
                 at_home, _ = is_at_town()
                 if at_home:
-                    # clear bag for next battle round
+                    # clear bag
                     post_action(
                         'http://s1sky.gs.funmily.com/api/inventories/put_all_item_to_celler.json')
                     time.sleep(10)
@@ -45,6 +46,5 @@ def area_battle():
             # finish
             post_action('http://s1sky.gs.funmily.com/api/battles/finish.json')
 
-        # go_town
-        post_action('http://s1sky.gs.funmily.com/api/fields/go_town.json')
-        time.sleep(10)
+        # go_home
+        go_home()

@@ -8,6 +8,7 @@ from battle_handlers import config
 from battle_handlers import enemy_pop
 from battle_handlers import enter_area
 from battle_handlers import get_battle
+from battle_handlers import get_exchange_info
 from battle_handlers import get_move
 from battle_handlers import get_status
 from battle_handlers import move_channel
@@ -55,28 +56,9 @@ def _get_seal_num():
     return point_seal_num, round_seal_num
 
 
-def _get_exchange_info():
-    payload = {'npc_id': exchange_npc_id}
-    response = get_status(
-        'http://s1sky.gs.funmily.com/api/item_exchanges/item_exchange_list.json', payload=payload)
-    items = response.get('response').get('body').get('items')
-
-    exchange_limit = 0
-    require_count = 0
-    has_num = 0
-    for item in items:
-        if item.get('code') == exchange_code:
-            exchange_limit = item.get('exchange_limit')
-            require_count = item.get('require_count')
-            has_num = item.get('has_require_item_num')
-
-    logger.info('exchange_limit {}, require_count {}, has_num {}'.format(
-        exchange_limit, require_count, has_num))
-    return exchange_limit, require_count, has_num
-
-
 def sublimation_battle():
-    exchange_limit, require_count, has_num = _get_exchange_info()
+    exchange_limit, require_count, has_num = get_exchange_info(
+        exchange_npc_id, exchange_code)
     if exchange_limit == 0:
         return
 
@@ -143,4 +125,5 @@ def sublimation_battle():
                 'http://s1sky.gs.funmily.com/api/item_exchanges/exchange_item.json?', payload=payload)
 
         # _get_exchange_info
-        exchange_limit, require_count, has_num = _get_exchange_info()
+        exchange_limit, require_count, has_num = get_exchange_info(
+            exchange_npc_id, exchange_code)
