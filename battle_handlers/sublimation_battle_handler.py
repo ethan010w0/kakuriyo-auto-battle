@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import logging
 import sys
-import time
 
 from battle_handlers import config
 from battle_handlers import enemy_pop
 from battle_handlers import enter_area
+from battle_handlers import exchange
 from battle_handlers import get_battle
 from battle_handlers import get_exchange_info
 from battle_handlers import get_move
@@ -17,8 +16,6 @@ from battle_handlers import run_battle
 from battle_handlers import run_move
 from battle_handlers import whistle
 
-
-logger = logging.getLogger(__name__)
 
 exchange_code = config.get('Sublimation Battle', 'ExchangeCode')
 area_code = config.get('Sublimation Battle', 'AreaCode')
@@ -57,6 +54,7 @@ def _get_seal_num():
 
 
 def sublimation_battle():
+    # get_exchange_info
     exchange_limit, require_count, has_num = get_exchange_info(
         exchange_npc_id, exchange_code)
     if exchange_limit == 0:
@@ -116,14 +114,8 @@ def sublimation_battle():
 
         if require_count < has_num:
             # exchange
-            payload = {
-                'code': exchange_code,
-                'npc_id': exchange_npc_id,
-                'count': 1
-            }
-            get_status(
-                'http://s1sky.gs.funmily.com/api/item_exchanges/exchange_item.json?', payload=payload)
+            exchange(exchange_npc_id, exchange_code)
 
-        # _get_exchange_info
+        # get_exchange_info
         exchange_limit, require_count, has_num = get_exchange_info(
             exchange_npc_id, exchange_code)

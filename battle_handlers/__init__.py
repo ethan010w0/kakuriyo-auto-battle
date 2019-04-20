@@ -69,12 +69,14 @@ def is_at_town():
     return at_home, at_town
 
 
-def enter_area(area_code):
+def enter_area(area_code, units_preset=None):
     _, at_town = is_at_town()
     if not at_town:
         return
 
     payload = {'area_code': area_code}
+    if units_preset:
+        payload['preset_num'] = units_preset
     payload.update(cert_payload)
     post_action(
         'http://s1sky.gs.funmily.com/api/fields/enter_area.json', payload)
@@ -152,6 +154,16 @@ def get_exchange_info(exchange_npc_id, exchange_code):
     return exchange_limit, require_count, has_num
 
 
+def exchange(exchange_npc_id, exchange_code, count=1):
+    payload = {
+        'code': exchange_code,
+        'npc_id': exchange_npc_id,
+        'count': count
+    }
+    get_status(
+        'http://s1sky.gs.funmily.com/api/item_exchanges/exchange_item.json?', payload=payload)
+
+
 def whistle():
     response = post_action(
         'http://s1sky.gs.funmily.com/api/items/whistle.json')
@@ -167,6 +179,7 @@ def whistle():
     body = response.get('response').get('body')
     # whistle named enemy
     if body.get('named'):
+        logger.info('wait for named enemy')
         time.sleep(60)
         return whistle()
 

@@ -1,22 +1,29 @@
 # -*- coding: utf-8 -*-
 
 import csv
+import logging
+import time
 
 from battle_handlers import config
 from battle_handlers import enemy_pop
 from battle_handlers import enter_area
+from battle_handlers import exchange
 from battle_handlers import get_battle
 from battle_handlers import get_exchange_info
 from battle_handlers import get_move
 from battle_handlers import get_status
 from battle_handlers import go_home
+from battle_handlers import is_at_town
 from battle_handlers import move_channel
 from battle_handlers import post_action
 from battle_handlers import run_battle
 from battle_handlers import run_move
 
 
+logger = logging.getLogger(__name__)
+
 summons_sources = config.get('Summons Battle', 'SummonsSources')
+units_preset = config.get('Summons Battle', 'UnitsPreset')
 
 channel = 1
 exchange_npc_id = 35
@@ -37,13 +44,23 @@ def _do(field_code, enemy_code, enemy_position):
 
     # enemy_pop
     battle_info = enemy_pop(enemy_code)
+    if not battle_info:
+        at_home, _ = is_at_town()
+        if at_home:
+            # clear bag
+            post_action(
+                'http://s1sky.gs.funmily.com/api/inventories/put_all_item_to_celler.json')
+            time.sleep(10)
+        return False, at_home
 
-    # battle
+        # battle
     battle_client_id = get_battle(battle_info)
     run_battle(battle_info, battle_client_id)
 
     # finish
     post_action('http://s1sky.gs.funmily.com/api/battles/finish.json')
+
+    return True, False
 
 
 def summons_battle():
@@ -52,49 +69,69 @@ def summons_battle():
 
     area_battles = {}
     reader = csv.reader(summons_sources.splitlines())
-    for challenge_code, exchange_code, area_code, field_code, enemy_code, enemy_position_x, enemy_position_y in reader:
+    for (challenge_code, exchange_code,
+         area_code, field_code,
+         enemy_code, enemy_position_x, enemy_position_y) in reader:
         if challenge_statuses.get(int(challenge_code)) != 1:
             continue
 
         battles = area_battles.setdefault(area_code, [])
-        battles.append({
-            'field_code': int(field_code),
-            'enemy_code': int(enemy_code),
-            'enemy_position': (int(enemy_position_x), int(enemy_position_y)),
-            'exchange_code': int(exchange_code)
-        })
+        battles.append((
+            field_code,
+            enemy_code,
+            # enemy_position
+            (enemy_position_x, enemy_position_y),
+            int(exchange_code)
+        ))
 
-    for area_code, battles in area_battles:
+    if not area_battles:
+        logger.info('no pending battles')
+        return
+
+    for area_code, battles in area_battles.items():
         # enter_area
-        enter_area(area_code)
+        enter_area(area_code, units_preset)
 
         # move_channel
         move_channel(channel)
 
         # challenge first
         for field_code, enemy_code, enemy_position, _ in battles:
+            logger.info('challenge battle with {}'.format(enemy_code))
+
             # _do
-            _do(field_code, enemy_code, enemy_position)
+            done, at_home = _do(field_code, enemy_code, enemy_position)
+            if not done:
+                if at_home:
+                    logger.info('battle falied')
+                    return
+                else:
+                    continue
 
         # exchange next
         for field_code, enemy_code, enemy_position, exchange_code in battles:
+            if exchange_code == -1:
+                continue
+            logger.info('exchange battle with {}'.format(enemy_code))
+
+            # get_exchange_info
             exchange_limit, require_count, has_num = get_exchange_info(
                 exchange_npc_id, exchange_code)
-
             while exchange_limit > 0:
                 # _do
                 _do(field_code, enemy_code, enemy_position)
+                if not done:
+                    if at_home:
+                        logger.info('battle falied')
+                        return
+                    else:
+                        continue
 
                 if require_count < has_num:
                     # exchange
-                    payload = {
-                        'code': exchange_code,
-                        'npc_id': exchange_npc_id,
-                        'count': 1
-                    }
-                    get_status(
-                        'http://s1sky.gs.funmily.com/api/item_exchanges/exchange_item.json?', payload=payload)
+                    exchange(exchange_npc_id, exchange_code)
 
+                # get_exchange_info
                 exchange_limit, require_count, has_num = get_exchange_info(
                     exchange_npc_id, exchange_code)
 
