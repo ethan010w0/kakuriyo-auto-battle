@@ -23,7 +23,7 @@ from battle_handlers import run_move
 logger = logging.getLogger(__name__)
 
 summons_sources = config.get('Summons Battle', 'SummonsSources')
-units_preset = config.get('Summons Battle', 'UnitsPreset')
+units_preset = config.getint('Summons Battle', 'UnitsPreset')
 
 channel = 1
 exchange_npc_id = 35

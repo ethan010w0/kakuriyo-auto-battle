@@ -12,9 +12,9 @@ from battle_handlers import run_battle
 from battle_handlers import whistle
 
 
-area_code = config.get('Area Battle', 'AreaCode')
-area_duration = config.getfloat('Area Battle', 'AreaDuration')
-round_times = config.get('Area Battle', 'RoundTimes')
+area_code = config.getint('Area Battle', 'AreaCode')
+area_duration = config.getint('Area Battle', 'AreaDuration')
+round_times = config.getint('Area Battle', 'RoundTimes')
 
 
 def area_battle():

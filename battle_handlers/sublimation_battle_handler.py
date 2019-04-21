@@ -17,16 +17,16 @@ from battle_handlers import run_move
 from battle_handlers import whistle
 
 
-exchange_code = config.get('Sublimation Battle', 'ExchangeCode')
-area_code = config.get('Sublimation Battle', 'AreaCode')
-field_code = config.get('Sublimation Battle', 'FieldCode')
-round_enemy_code = config.get('Sublimation Battle', 'RoundEnemyCode')
-point_enemy_code = config.get('Sublimation Battle', 'PointEnemyCode')
+exchange_code = config.getint('Sublimation Battle', 'ExchangeCode')
+area_code = config.getint('Sublimation Battle', 'AreaCode')
+field_code = config.getint('Sublimation Battle', 'FieldCode')
+round_enemy_code = config.getint('Sublimation Battle', 'RoundEnemyCode')
+point_enemy_code = config.getint('Sublimation Battle', 'PointEnemyCode')
 
-point_enemy_position = (config.get('Sublimation Battle', 'PointEnemyPositionX'),
-                        config.get('Sublimation Battle', 'PointEnemyPositionY'))
-round_enemy_position = (config.get('Sublimation Battle', 'RoundEnemyPositionX'),
-                        config.get('Sublimation Battle', 'RoundEnemyPositionY'))
+point_enemy_position = (config.getint('Sublimation Battle', 'PointEnemyPositionX'),
+                        config.getint('Sublimation Battle', 'PointEnemyPositionY'))
+round_enemy_position = (config.getint('Sublimation Battle', 'RoundEnemyPositionX'),
+                        config.getint('Sublimation Battle', 'RoundEnemyPositionY'))
 
 channel = 1
 exchange_npc_id = 543
