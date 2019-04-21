@@ -117,7 +117,16 @@ def summons_battle():
             # get_exchange_info
             exchange_limit, require_count, has_num = get_exchange_info(
                 exchange_npc_id, exchange_code)
+
             while exchange_limit > 0:
+                if require_count < has_num:
+                    # exchange
+                    exchange(exchange_npc_id, exchange_code)
+                    # get_exchange_info
+                    exchange_limit, require_count, has_num = get_exchange_info(
+                        exchange_npc_id, exchange_code)
+                    continue
+
                 # _do
                 _do(field_code, enemy_code, enemy_position)
                 if not done:
@@ -126,10 +135,6 @@ def summons_battle():
                         return
                     else:
                         continue
-
-                if require_count < has_num:
-                    # exchange
-                    exchange(exchange_npc_id, exchange_code)
 
                 # get_exchange_info
                 exchange_limit, require_count, has_num = get_exchange_info(

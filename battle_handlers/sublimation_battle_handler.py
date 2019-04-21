@@ -67,6 +67,14 @@ def sublimation_battle():
     move_channel(channel)
 
     while exchange_limit > 0:
+        if require_count < has_num:
+            # exchange
+            exchange(exchange_npc_id, exchange_code)
+            # get_exchange_info
+            exchange_limit, require_count, has_num = get_exchange_info(
+                exchange_npc_id, exchange_code)
+            continue
+
         # _get_item_num
         point_seal_num, round_seal_num = _get_seal_num()
 
@@ -111,10 +119,6 @@ def sublimation_battle():
 
             # finish
             post_action('http://s1sky.gs.funmily.com/api/battles/finish.json')
-
-        if require_count < has_num:
-            # exchange
-            exchange(exchange_npc_id, exchange_code)
 
         # get_exchange_info
         exchange_limit, require_count, has_num = get_exchange_info(
