@@ -14,14 +14,10 @@ from battle_handlers import whistle
 
 area_code = config.getint('Area Battle', 'AreaCode')
 area_duration = config.getint('Area Battle', 'AreaDuration')
-round_times = config.getint('Area Battle', 'RoundTimes')
 
 
 def area_battle():
-    round_time = 0
-    while round_time < round_times:
-        round_time += 1
-
+    while True:
         # enter_area
         enter_area(area_code)
 
