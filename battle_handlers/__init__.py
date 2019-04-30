@@ -14,7 +14,7 @@ from websocket import create_connection
 logger = logging.getLogger(__name__)
 
 config = configparser.ConfigParser()
-config.read('auto_battle.ini')
+config.read('auto_battle.ini', encoding='utf_8')
 
 client_id = config.get('Certification', 'ClientId')
 
