@@ -23,10 +23,10 @@ from battle_handlers import run_move
 logger = logging.getLogger(__name__)
 
 summons_sources = config.get('Summons Battle', 'SummonsSources')
+exchange_npc_id = config.getint('Summons Battle', 'ExchangeNpcId')
 units_preset = config.getint('Summons Battle', 'UnitsPreset')
 
 channel = 1
-exchange_npc_id = 35
 
 
 def _get_challenge_statuses():

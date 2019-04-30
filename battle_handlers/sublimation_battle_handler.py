@@ -17,6 +17,7 @@ from battle_handlers import run_move
 from battle_handlers import whistle
 
 
+exchange_npc_id = config.getint('Sublimation Battle', 'ExchangeNpcId')
 exchange_code = config.getint('Sublimation Battle', 'ExchangeCode')
 area_code = config.getint('Sublimation Battle', 'AreaCode')
 field_code = config.getint('Sublimation Battle', 'FieldCode')
@@ -29,7 +30,6 @@ round_enemy_position = (config.getint('Sublimation Battle', 'RoundEnemyPositionX
                         config.getint('Sublimation Battle', 'RoundEnemyPositionY'))
 
 channel = 1
-exchange_npc_id = 543
 # 點的印章
 point_seal_id = 1913344
 # 圓的印章
