@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import logging
 import sys
 
 from battle_handlers import config
@@ -17,8 +18,10 @@ from battle_handlers import run_move
 from battle_handlers import whistle
 
 
+logger = logging.getLogger(__name__)
+
 exchange_npc_id = config.getint('Sublimation Battle', 'ExchangeNpcId')
-exchange_code = config.getint('Sublimation Battle', 'ExchangeCode')
+exchange_codes = config.get('Sublimation Battle', 'ExchangeCodes')
 area_code = config.getint('Sublimation Battle', 'AreaCode')
 field_code = config.getint('Sublimation Battle', 'FieldCode')
 round_enemy_code = config.getint('Sublimation Battle', 'RoundEnemyCode')
@@ -54,45 +57,64 @@ def _get_seal_num():
 
 
 def sublimation_battle():
-    # get_exchange_info
-    exchange_limit, require_count, has_num = get_exchange_info(
-        exchange_npc_id, exchange_code)
-    if exchange_limit == 0:
-        return
+    parsed_exchange_codes = map(int, exchange_codes.split(','))
+    for exchange_code in parsed_exchange_codes:
+        logger.info('battle for exchange code {}'.format(exchange_code))
 
-    # enter_area
-    enter_area(area_code)
+        # get_exchange_info
+        exchange_limit, require_count, has_num = get_exchange_info(
+            exchange_npc_id, exchange_code)
+        if exchange_limit == 0:
+            return
 
-    # move_channel
-    move_channel(channel)
+        # enter_area
+        enter_area(area_code)
 
-    while exchange_limit > 0:
-        if require_count < has_num:
-            # exchange
-            exchange(exchange_npc_id, exchange_code)
-            # get_exchange_info
-            exchange_limit, require_count, has_num = get_exchange_info(
-                exchange_npc_id, exchange_code)
-            continue
+        # move_channel
+        move_channel(channel)
 
-        # _get_item_num
-        point_seal_num, round_seal_num = _get_seal_num()
+        while exchange_limit > 0:
+            if require_count < has_num:
+                # exchange
+                exchange(exchange_npc_id, exchange_code)
+                # get_exchange_info
+                exchange_limit, require_count, has_num = get_exchange_info(
+                    exchange_npc_id, exchange_code)
+                continue
 
-        if round_seal_num or point_seal_num:
-            point_map = (
-                point_seal_num, point_enemy_code, point_enemy_position)
-            round_map = (
-                round_seal_num, round_enemy_code, round_enemy_position)
-            for seal_num, enemy_code, enemy_position in (point_map, round_map):
-                if not seal_num:
-                    continue
+            # _get_item_num
+            point_seal_num, round_seal_num = _get_seal_num()
 
-                # move
-                move_info = get_move()
-                run_move(move_info, channel, field_code, enemy_position)
+            if round_seal_num or point_seal_num:
+                point_map = (
+                    point_seal_num, point_enemy_code, point_enemy_position)
+                round_map = (
+                    round_seal_num, round_enemy_code, round_enemy_position)
+                for seal_num, enemy_code, enemy_position in (point_map, round_map):
+                    if not seal_num:
+                        continue
 
-                # enemy_pop
-                battle_info = enemy_pop(enemy_code)
+                    # move
+                    move_info = get_move()
+                    run_move(move_info, channel, field_code, enemy_position)
+
+                    # enemy_pop
+                    battle_info = enemy_pop(enemy_code)
+                    if not battle_info:
+                        enter_area(area_code)
+                        move_channel(channel)
+                        continue
+
+                    # battle
+                    battle_client_id = get_battle(battle_info)
+                    run_battle(battle_info, battle_client_id)
+
+                    # finish
+                    post_action(
+                        'http://s1sky.gs.funmily.com/api/battles/finish.json')
+            else:
+                # whistle
+                battle_info = whistle()
                 if not battle_info:
                     enter_area(area_code)
                     move_channel(channel)
@@ -105,21 +127,7 @@ def sublimation_battle():
                 # finish
                 post_action(
                     'http://s1sky.gs.funmily.com/api/battles/finish.json')
-        else:
-            # whistle
-            battle_info = whistle()
-            if not battle_info:
-                enter_area(area_code)
-                move_channel(channel)
-                continue
 
-            # battle
-            battle_client_id = get_battle(battle_info)
-            run_battle(battle_info, battle_client_id)
-
-            # finish
-            post_action('http://s1sky.gs.funmily.com/api/battles/finish.json')
-
-        # get_exchange_info
-        exchange_limit, require_count, has_num = get_exchange_info(
-            exchange_npc_id, exchange_code)
+            # get_exchange_info
+            exchange_limit, require_count, has_num = get_exchange_info(
+                exchange_npc_id, exchange_code)
