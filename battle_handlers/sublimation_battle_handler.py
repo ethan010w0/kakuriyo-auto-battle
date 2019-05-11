@@ -86,11 +86,11 @@ def sublimation_battle():
             point_seal_num, round_seal_num = _get_seal_num()
 
             if round_seal_num or point_seal_num:
-                point_map = (
+                point_exchange_battle_info = (
                     point_seal_num, point_enemy_code, point_enemy_position)
-                round_map = (
+                round_exchange_battle_info = (
                     round_seal_num, round_enemy_code, round_enemy_position)
-                for seal_num, enemy_code, enemy_position in (point_map, round_map):
+                for seal_num, enemy_code, enemy_position in (point_exchange_battle_info, round_exchange_battle_info):
                     if not seal_num:
                         continue
 
@@ -101,7 +101,9 @@ def sublimation_battle():
                     # enemy_pop
                     battle_info = enemy_pop(enemy_code)
                     if not battle_info:
+                        # enter_area
                         enter_area(area_code)
+                        # move_channel
                         move_channel(channel)
                         continue
 
@@ -116,7 +118,9 @@ def sublimation_battle():
                 # whistle
                 battle_info = whistle()
                 if not battle_info:
+                    # enter_area
                     enter_area(area_code)
+                    # move_channel
                     move_channel(channel)
                     continue
 

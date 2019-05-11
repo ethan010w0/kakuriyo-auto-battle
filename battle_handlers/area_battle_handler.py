@@ -32,6 +32,7 @@ def area_battle():
                     post_action(
                         'http://s1sky.gs.funmily.com/api/inventories/put_all_item_to_celler.json')
                     time.sleep(10)
+                    # enter_area
                     enter_area(area_code)
                 continue
 
