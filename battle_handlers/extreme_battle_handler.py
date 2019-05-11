@@ -22,9 +22,9 @@ enemy_code = config.getint('Extreme Battle', 'EnemyCode')
 enemy_position = (config.getint('Extreme Battle', 'EnemyPositionX'),
                   config.getint('Extreme Battle', 'EnemyPositionY'))
 key_exchange_npc_id = config.getint('Extreme Battle', 'KeyExchangeNpcId')
-key_exchange_code = config.get('Extreme Battle', 'KeyExchangeCode')
+key_exchange_code = config.getint('Extreme Battle', 'KeyExchangeCode')
 exp_exchange_npc_id = config.getint('Extreme Battle', 'ExpExchangeNpcId')
-exp_exchange_code = config.get('Extreme Battle', 'ExpExchangeCode')
+exp_exchange_code = config.getint('Extreme Battle', 'ExpExchangeCode')
 
 channel = 1
 

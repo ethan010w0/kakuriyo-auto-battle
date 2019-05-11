@@ -138,12 +138,16 @@ def get_exchange_info(exchange_npc_id, exchange_code):
     payload = {'npc_id': exchange_npc_id}
     response = get_status(
         'http://s1sky.gs.funmily.com/api/item_exchanges/item_exchange_list.json', payload=payload)
-    items = response.get('response').get('body').get('items')
+    body = response.get('response').get('body')
+    meta = body.get('meta')
+    if meta.get('npc_exchange_limit') == meta.get('npc_exchange_count'):
+        logger.info('npc_exchange_limit reached')
+        return 0, None, None
 
-    exchange_limit = 0
-    require_count = 0
-    has_num = 0
-    for item in items:
+    exchange_limit = None
+    require_count = None
+    has_num = None
+    for item in body.get('items'):
         if item.get('code') == exchange_code:
             exchange_limit = item.get('exchange_limit')
             require_count = item.get('require_count')
