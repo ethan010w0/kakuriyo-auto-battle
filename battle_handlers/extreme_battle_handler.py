@@ -53,7 +53,7 @@ def extreme_battle():
             exchange_limit, require_count, has_num = get_exchange_info(
                 exchange_npc_id, exchange_code)
 
-            while exchange_limit > 0 and require_count < has_num:
+            while exchange_limit != 0 and require_count < has_num:
                 # exchange
                 exchange(exchange_npc_id, exchange_code)
                 # get_exchange_info
