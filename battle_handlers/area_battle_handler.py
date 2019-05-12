@@ -34,6 +34,7 @@ def area_battle():
                     time.sleep(10)
                     # enter_area
                     enter_area(area_code)
+                    timeout = time.time() + area_duration
                 continue
 
             # battle
