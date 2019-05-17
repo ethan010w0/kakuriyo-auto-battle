@@ -34,9 +34,9 @@ round_enemy_position = (config.getint('Sublimation Battle', 'RoundEnemyPositionX
 
 channel = 1
 # 點的印章
-point_seal_id = 1913344
+point_seal_code = 5122
 # 圓的印章
-round_seal_id = 1913340
+round_seal_code = 5123
 
 
 def _get_seal_num():
@@ -48,9 +48,9 @@ def _get_seal_num():
     point_seal_num = 0
     round_seal_num = 0
     for important_item in important_items:
-        if important_item.get('id') == point_seal_id:
+        if important_item.get('code') == point_seal_code:
             point_seal_num = important_item.get('num')
-        elif important_item.get('id') == round_seal_id:
+        elif important_item.get('code') == round_seal_code:
             round_seal_num = important_item.get('num')
 
     return point_seal_num, round_seal_num
