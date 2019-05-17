@@ -124,10 +124,9 @@ def get_move():
     }
 
 
-def run_move(move_info, channel, field_code, position):
+def run_move(move_info, player_id, channel, field_code, position):
     move_client_id = move_info.get('move_client_id')
     x, y = position
-    player_id = get_player_id()
     move_host = move_info.get('move_host').replace('http', 'ws')
     ws = create_connection(move_host)
 

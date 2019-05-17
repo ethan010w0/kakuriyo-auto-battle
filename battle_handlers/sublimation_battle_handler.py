@@ -10,6 +10,7 @@ from battle_handlers import exchange
 from battle_handlers import get_battle
 from battle_handlers import get_exchange_info
 from battle_handlers import get_move
+from battle_handlers import get_player_id
 from battle_handlers import get_status
 from battle_handlers import move_channel
 from battle_handlers import post_action
@@ -32,6 +33,7 @@ point_enemy_position = (config.getint('Sublimation Battle', 'PointEnemyPositionX
 round_enemy_position = (config.getint('Sublimation Battle', 'RoundEnemyPositionX'),
                         config.getint('Sublimation Battle', 'RoundEnemyPositionY'))
 
+player_id = get_player_id()
 channel = 1
 # 點的印章
 point_seal_code = 5122
@@ -65,7 +67,7 @@ def sublimation_battle():
         exchange_limit, require_count, has_num = get_exchange_info(
             exchange_npc_id, exchange_code)
         if exchange_limit == 0:
-            return
+            continue
 
         # enter_area
         enter_area(area_code)
@@ -96,7 +98,8 @@ def sublimation_battle():
 
                     # move
                     move_info = get_move()
-                    run_move(move_info, channel, field_code, enemy_position)
+                    run_move(
+                        move_info, player_id, channel, field_code, enemy_position)
 
                     # enemy_pop
                     battle_info = enemy_pop(enemy_code)

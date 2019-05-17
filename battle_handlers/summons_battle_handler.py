@@ -11,6 +11,7 @@ from battle_handlers import exchange
 from battle_handlers import get_battle
 from battle_handlers import get_exchange_info
 from battle_handlers import get_move
+from battle_handlers import get_player_id
 from battle_handlers import get_status
 from battle_handlers import go_home
 from battle_handlers import is_at_town
@@ -26,6 +27,7 @@ summons_sources = config.get('Summons Battle', 'SummonsSources')
 exchange_npc_id = config.getint('Summons Battle', 'ExchangeNpcId')
 units_preset = config.getint('Summons Battle', 'UnitsPreset')
 
+player_id = get_player_id()
 channel = 1
 
 
@@ -40,7 +42,7 @@ def _get_challenge_statuses():
 def _do(field_code, enemy_code, enemy_position):
     # move
     move_info = get_move()
-    run_move(move_info, channel, field_code, enemy_position)
+    run_move(move_info, player_id, channel, field_code, enemy_position)
 
     # enemy_pop
     battle_info = enemy_pop(enemy_code)
