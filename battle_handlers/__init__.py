@@ -60,6 +60,11 @@ def post_action(url, payload=cert_payload):
     return request.json()
 
 
+def get_player_id():
+    response = get_status('http://s1sky.gs.funmily.com/api/players.json')
+    return response.get('response').get('body').get('id')
+
+
 def is_at_town():
     response = get_status('http://s1sky.gs.funmily.com/api/players.json')
     body = response.get('response').get('body')
@@ -120,15 +125,16 @@ def get_move():
 
 
 def run_move(move_info, channel, field_code, position):
-    move_host = move_info.get('move_host').replace('http', 'ws')
     move_client_id = move_info.get('move_client_id')
     x, y = position
+    player_id = get_player_id()
+    move_host = move_info.get('move_host').replace('http', 'ws')
     ws = create_connection(move_host)
 
     logger.info('make_move {}, {}'.format(x, y))
     ws.send('{{"channel":"/meta/connect","clientId":"{}","connectionType":"websocket","id":"2"}}'.format(move_client_id))
-    ws.send('{{"channel":"/field/{}-{}/command","data":{{"command_type":"move","cid":"{}","pid":4058,"info":{{"d8":{},"md":{},"cp":{{"x":{},"y":{}}}}}}},"clientId":"{}","id":"3"}}'.format(
-        field_code, channel, client_id, x, y, x, y, move_client_id))
+    ws.send('{{"channel":"/field/{}-{}/command","data":{{"command_type":"move","cid":"{}","pid":{},"info":{{"d8":{},"md":{},"cp":{{"x":{},"y":{}}}}}}},"clientId":"{}","id":"3"}}'.format(
+        field_code, channel, client_id, player_id, x, y, x, y, move_client_id))
     result = ws.recv()
     logger.debug(result)
     ws.close()
