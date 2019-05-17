@@ -15,7 +15,7 @@ if __name__ == "__main__":
         description='An auto battle script for game kakuriyo-no-mon.')
     parser.add_argument('command',
                         choices=['area', 'extreme', 'sublimation', 'summons'],
-                        help='battle type: { area, sublimation, summons }',
+                        help='battle type: { area, extreme, sublimation, summons }',
                         metavar='command')
     parser.add_argument('-v', '--verbose',
                         action='store_true',
