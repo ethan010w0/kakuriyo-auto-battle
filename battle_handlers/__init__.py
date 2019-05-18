@@ -96,7 +96,7 @@ def enter_area(area_code, units_preset=None):
             'http://s1sky.gs.funmily.com/api/inventories/put_all_item_to_celler.json')
 
     payload = {'area_code': area_code}
-    if units_preset:
+    if units_preset and units_preset > 0:
         payload['preset_num'] = units_preset
     post_action(
         'http://s1sky.gs.funmily.com/api/fields/enter_area.json', payload)

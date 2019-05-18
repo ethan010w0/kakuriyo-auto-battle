@@ -6,7 +6,6 @@ from battle_handlers import config
 from battle_handlers import enter_area
 from battle_handlers import get_battle
 from battle_handlers import go_home
-from battle_handlers import is_at_town
 from battle_handlers import post_action
 from battle_handlers import run_battle
 from battle_handlers import whistle
@@ -26,15 +25,9 @@ def area_battle():
             # whistle
             battle_info = whistle()
             if not battle_info:
-                at_home, _ = is_at_town()
-                if at_home:
-                    # clear bag
-                    post_action(
-                        'http://s1sky.gs.funmily.com/api/inventories/put_all_item_to_celler.json')
-                    time.sleep(10)
-                    # enter_area
-                    enter_area(area_code)
-                    timeout = time.time() + area_duration
+                # enter_area
+                enter_area(area_code)
+                timeout = time.time() + area_duration
                 continue
 
             # battle

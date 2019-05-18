@@ -10,7 +10,6 @@ from battle_handlers import get_battle
 from battle_handlers import get_exchange_info
 from battle_handlers import get_move
 from battle_handlers import get_player_id
-from battle_handlers import is_at_town
 from battle_handlers import move_channel
 from battle_handlers import post_action
 from battle_handlers import run_battle

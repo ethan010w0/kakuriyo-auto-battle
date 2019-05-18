@@ -14,7 +14,6 @@ from battle_handlers import get_move
 from battle_handlers import get_player_id
 from battle_handlers import get_status
 from battle_handlers import go_home
-from battle_handlers import is_at_town
 from battle_handlers import move_channel
 from battle_handlers import post_action
 from battle_handlers import run_battle
@@ -47,13 +46,7 @@ def _do(field_code, enemy_code, enemy_position):
     # enemy_pop
     battle_info = enemy_pop(enemy_code)
     if not battle_info:
-        at_home, _ = is_at_town()
-        if at_home:
-            # clear bag
-            post_action(
-                'http://s1sky.gs.funmily.com/api/inventories/put_all_item_to_celler.json')
-            time.sleep(10)
-        return False, at_home
+        return False
 
         # battle
     battle_client_id = get_battle(battle_info)
@@ -62,7 +55,7 @@ def _do(field_code, enemy_code, enemy_position):
     # finish
     post_action('http://s1sky.gs.funmily.com/api/battles/finish.json')
 
-    return True, False
+    return True
 
 
 def summons_battle():
@@ -102,13 +95,10 @@ def summons_battle():
             logger.info('challenge battle with {}'.format(enemy_code))
 
             # _do
-            done, at_home = _do(field_code, enemy_code, enemy_position)
+            done = _do(field_code, enemy_code, enemy_position)
             if not done:
-                if at_home:
-                    logger.info('battle falied')
-                    return
-                else:
-                    continue
+                logger.info('battle falied')
+                break
 
         # exchange next
         for field_code, enemy_code, enemy_position, exchange_code in battles:
@@ -132,11 +122,8 @@ def summons_battle():
                 # _do
                 _do(field_code, enemy_code, enemy_position)
                 if not done:
-                    if at_home:
-                        logger.info('battle falied')
-                        return
-                    else:
-                        continue
+                    logger.info('battle falied')
+                    break
 
                 # get_exchange_info
                 exchange_limit, require_count, has_num = get_exchange_info(
