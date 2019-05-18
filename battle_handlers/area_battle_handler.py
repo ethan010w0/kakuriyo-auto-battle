@@ -25,6 +25,9 @@ def area_battle():
             # whistle
             battle_info = whistle()
             if not battle_info:
+                # clear bag
+                post_action(
+                    'http://s1sky.gs.funmily.com/api/inventories/put_all_item_to_celler.json')
                 # enter_area
                 enter_area(area_code)
                 timeout = time.time() + area_duration

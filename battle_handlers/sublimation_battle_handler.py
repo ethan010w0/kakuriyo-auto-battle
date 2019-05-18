@@ -42,6 +42,7 @@ round_seal_code = 5123
 
 
 def _get_seal_num():
+    # get items
     response = get_status(
         'http://s1sky.gs.funmily.com/api/inventories/load_minimum_info.json')
     important_items = response.get('response').get(

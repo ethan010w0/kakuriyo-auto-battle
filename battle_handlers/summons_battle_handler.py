@@ -46,6 +46,9 @@ def _do(field_code, enemy_code, enemy_position):
     # enemy_pop
     battle_info = enemy_pop(enemy_code)
     if not battle_info:
+        # clear bag
+        post_action(
+            'http://s1sky.gs.funmily.com/api/inventories/put_all_item_to_celler.json')
         return False
 
         # battle

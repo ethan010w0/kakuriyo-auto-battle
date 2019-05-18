@@ -11,6 +11,7 @@ import websocket
 
 from websocket import create_connection
 
+
 logger = logging.getLogger(__name__)
 
 config = configparser.ConfigParser()
@@ -87,13 +88,9 @@ def is_at_town():
 
 
 def enter_area(area_code, units_preset=None):
-    at_home, at_town = is_at_town()
+    _, at_town = is_at_town()
     if not at_town:
         return
-    if at_home:
-        # clear bag
-        post_action(
-            'http://s1sky.gs.funmily.com/api/inventories/put_all_item_to_celler.json')
 
     payload = {'area_code': area_code}
     if units_preset and units_preset > 0:
@@ -155,7 +152,7 @@ def run_move(move_info, player_id, channel, field_code, position):
 def get_exchange_info(exchange_npc_id, exchange_code):
     payload = {'npc_id': exchange_npc_id}
     response = get_status(
-        'http://s1sky.gs.funmily.com/api/item_exchanges/item_exchange_list.json', payload=payload)
+        'http://s1sky.gs.funmily.com/api/item_exchanges/item_exchange_list.json', payload)
     body = response.get('response').get('body')
     meta = body.get('meta')
     if meta.get('npc_exchange_limit') == meta.get('npc_exchange_count'):
@@ -183,7 +180,7 @@ def exchange(exchange_npc_id, exchange_code, count=1):
         'count': count
     }
     get_status(
-        'http://s1sky.gs.funmily.com/api/item_exchanges/exchange_item.json?', payload=payload)
+        'http://s1sky.gs.funmily.com/api/item_exchanges/exchange_item.json', payload)
 
 
 def whistle():
