@@ -93,7 +93,7 @@ def enter_area(area_code, units_preset=None):
         return
 
     payload = {'area_code': area_code}
-    if units_preset and units_preset > 0:
+    if units_preset and units_preset != -1:
         payload['preset_num'] = units_preset
     post_action(
         'http://s1sky.gs.funmily.com/api/fields/enter_area.json', payload)
