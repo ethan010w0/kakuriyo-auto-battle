@@ -68,6 +68,7 @@ def post_action(url, payload=None):
 
 def set_client_id():
     response = post_action('http://s1sky.gs.funmily.com/api/games/init.json')
+    global client_id
     client_id = response.get('response').get('body').get('client_id')
     cert_payload['client_id'] = client_id
     time.sleep(10)
@@ -188,7 +189,7 @@ def whistle():
         'http://s1sky.gs.funmily.com/api/items/whistle.json')
 
     head = response.get('response').get('head')
-    if head.get('status') == 1 and head.get('message') == u'不在郊外':
+    if head.get('status') == 1:
         return
     if head.get('status') == 99:
         # fix repeat whistle

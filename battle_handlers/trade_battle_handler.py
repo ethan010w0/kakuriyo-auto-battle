@@ -15,10 +15,10 @@ exhibit_sources = config.get('Trade Battle', 'ExhibitSources')
 exhibit_player_id = config.get('Trade Battle', 'ExhibitPlayerId')
 
 exhibit_price = 1
-exhibit_num = 30
+exhibit_num = 50
 
 
-def _exhibit_item(exhibit_code, exhibit_num):
+def _exhibit_item(exhibit_code):
     payload = {
         'item_code': exhibit_code,
         'num': exhibit_num,
@@ -63,17 +63,28 @@ def exhibit_battle():
         items = cellar.get(category)
         for item in items:
             item_code = item.get('code')
-            if item_code in exhibit_codes:
-                exhibit_item = (item_code, item.get('id'), item.get('type'))
+            if item_code not in exhibit_codes:
+                continue
+
+            item_num = item.get('num')
+            if item_num:
+                batches = item.get('num')/exhibit_num
+                for _ in range(batches):
+                    exhibit_item = (True, (item_code,))
+                    exhibit_items.append(exhibit_item)
+            else:
+                exhibit_item = (False, (item.get('id'), item.get('type')))
                 exhibit_items.append(exhibit_item)
 
     index = 0
     while index < len(exhibit_items):
-        exhibit_code, exhibit_id, exhibit_type = exhibit_items[index]
-        if exhibit_code:
+        item_has_num, item_info = exhibit_items[index]
+        if item_has_num:
+            exhibit_code, = item_info
             # _exhibit_item
-            response = _exhibit_item(exhibit_code, exhibit_num)
-        elif exhibit_id:
+            response = _exhibit_item(exhibit_code)
+        else:
+            exhibit_id, exhibit_type = item_info
             # _exhibit_equip
             response = _exhibit_equip(exhibit_id, exhibit_type)
 
@@ -94,6 +105,7 @@ def buy_battle():
 
         trades = response.get('response').get('body')
         if not trades:
+            logger.info('no trades')
             time.sleep(10)
             continue
 
