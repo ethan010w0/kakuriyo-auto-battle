@@ -4,6 +4,7 @@ import argparse
 import logging
 import sys
 
+from battle_handlers import set_client_id
 from battle_handlers.area_battle_handler import area_battle
 from battle_handlers.extreme_battle_handler import extreme_battle
 from battle_handlers.sublimation_battle_handler import sublimation_battle
@@ -17,6 +18,9 @@ if __name__ == "__main__":
                         choices=['area', 'extreme', 'sublimation', 'summons'],
                         help='battle type: { area, extreme, sublimation, summons }',
                         metavar='command')
+    parser.add_argument('-s', '--set-client-id',
+                        action='store_true',
+                        help='set a new client id')
     parser.add_argument('-v', '--verbose',
                         action='store_true',
                         help='increase output verbosity')
@@ -26,6 +30,9 @@ if __name__ == "__main__":
         logging.basicConfig(level=logging.DEBUG)
     else:
         logging.basicConfig(level=logging.INFO)
+
+    if args.set_client_id:
+        set_client_id()
 
     if args.command == 'area':
         area_battle()

@@ -51,13 +51,25 @@ def get_status(url, payload=None):
     return request.json()
 
 
-def post_action(url, payload=cert_payload):
+def post_action(url, payload=None):
+    if payload:
+        payload.update(cert_payload)
+    else:
+        payload = cert_payload
+
     request = requests.post(url, headers=headers,
                             cookies=cookies, json=payload)
     match = re.search(r'/(?P<action>[^/]*?).json', url)
     logger.info('{} {}'.format(match.group('action'), request.status_code))
     logger.debug(request.text)
     return request.json()
+
+
+def set_client_id():
+    response = post_action('http://s1sky.gs.funmily.com/api/games/init.json')
+    client_id = response.get('response').get('body').get('client_id')
+    cert_payload['client_id'] = client_id
+    time.sleep(10)
 
 
 def get_player_id():
@@ -75,14 +87,17 @@ def is_at_town():
 
 
 def enter_area(area_code, units_preset=None):
-    _, at_town = is_at_town()
+    at_home, at_town = is_at_town()
     if not at_town:
         return
+    if at_home:
+        # clear bag
+        post_action(
+            'http://s1sky.gs.funmily.com/api/inventories/put_all_item_to_celler.json')
 
     payload = {'area_code': area_code}
     if units_preset:
         payload['preset_num'] = units_preset
-    payload.update(cert_payload)
     post_action(
         'http://s1sky.gs.funmily.com/api/fields/enter_area.json', payload)
     time.sleep(10)
@@ -95,12 +110,10 @@ def go_home():
     # clear bag
     post_action(
         'http://s1sky.gs.funmily.com/api/inventories/put_all_item_to_celler.json')
-    time.sleep(10)
 
 
 def move_channel(channel):
     payload = {'channel': 1}
-    payload.update(cert_payload)
     post_action(
         'http://s1sky.gs.funmily.com/api/fields/move_channel.json', payload)
     time.sleep(10)
@@ -206,7 +219,6 @@ def whistle():
 
 def enemy_pop(enemy_code):
     payload = {'code': enemy_code, 'matching_id': 0}
-    payload.update(cert_payload)
     response = post_action(
         'http://s1sky.gs.funmily.com/api/battles/enemy_pop.json', payload)
 
