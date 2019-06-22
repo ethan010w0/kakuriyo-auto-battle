@@ -88,6 +88,13 @@ def is_at_town():
     return at_home, at_town
 
 
+def apply_to_party(num):
+    payload = {'num': num}
+    post_action(
+        'http://s1sky.gs.funmily.com/api/favorite_units/apply_to_party.json', payload)
+    time.sleep(10)
+
+
 def enter_area(area_code, units_preset=None):
     _, at_town = is_at_town()
     if not at_town:
