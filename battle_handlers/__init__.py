@@ -260,6 +260,7 @@ def run_battle(battle_info, battle_client_id):
     player_character = battle_info.get('player_character')
     ws_battle_host = battle_info.get('battle_host').replace('http', 'ws')
     subscribe = {}
+    count_id = 7
 
     def on_message(ws, message):
         logger.debug(message)
@@ -273,15 +274,22 @@ def run_battle(battle_info, battle_client_id):
                 publish_timer = str(int(time.time()))[-1:-8:-1][::-1]
                 ws.send('{{"channel":"/battle/{}/command","data":{{"publish_timer":{},"command_type":"sync_all","client_id":"{}","player_id":{}}},"clientId":"{}","id":"5"}}'.format(
                     battle_id, publish_timer, client_id, player_id, battle_client_id))
+        elif channel == '/meta/connect':
+            global count_id
+            ws.send(
+                '{{"channel":"/meta/connect","clientId":"{}","connectionType":"websocket","id":"{}"}}'.format(
+                    battle_client_id, count_id))
+            count_id += 1
+        elif channel == player_character:
+            info_type = content.get('data').get('info_type')
+            if info_type == 'sync_all':
                 ws.send('{{"channel":"/battle/{}/command","data":{{"publish_timer":{},"command_type":"start","client_id":"{}","player_id":{}}},"clientId":"{}","id":"6"}}'.format(
                     battle_id, publish_timer, client_id, player_id, battle_client_id))
-                ws.send('{{"channel":"/battle/{}/command","data":{{"command_type":"player_ids","client_id":"{}}}","player_id":{}}},"clientId":"{}","id":"7"}}'.format(
-                    battle_id, client_id, player_id, battle_client_id))
-        elif channel == player_character and content.get('data').get('info_type') == 'battle_finished':
-            ws.send('{{"channel":"/meta/disconnect","clientId":"{}","id":"8"}}'.format(
-                battle_client_id))
-            ws.send('{{"channel":"/meta/unsubscribe","clientId":"{}","subscription":"/battle/{}/info","id":"9"}}'.format(
-                battle_client_id, battle_id))
+            elif info_type == 'battle_finished':
+                ws.send('{{"channel":"/meta/disconnect","clientId":"{}","id":"{}"}}'.format(
+                    battle_client_id, count_id + 1))
+                ws.send('{{"channel":"/meta/unsubscribe","clientId":"{}","subscription":"/battle/{}/info","id":"{}"}}'.format(
+                    battle_client_id, battle_id, count_id + 2))
 
     def on_error(ws, error):
         logger.error(error)
