@@ -63,6 +63,7 @@ def extreme_battle():
             enter_area(area_code)
             # move_channel
             move_channel(channel)
+            continue
 
         # battle
         battle_client_id = get_battle(battle_info)

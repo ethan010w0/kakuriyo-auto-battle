@@ -101,7 +101,7 @@ def summons_battle():
             done = _do(field_code, enemy_code, enemy_position)
             if not done:
                 logger.info('battle falied')
-                break
+                continue
 
         # exchange next
         for field_code, enemy_code, enemy_position, exchange_code in battles:
