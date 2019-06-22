@@ -21,6 +21,7 @@ field_code = config.getint('Extreme Battle', 'FieldCode')
 enemy_code = config.getint('Extreme Battle', 'EnemyCode')
 enemy_position = (config.getint('Extreme Battle', 'EnemyPositionX'),
                   config.getint('Extreme Battle', 'EnemyPositionY'))
+trump_id = config.getint('Extreme Battle', 'TrumpId')
 key_exchange_npc_id = config.getint('Extreme Battle', 'KeyExchangeNpcId')
 key_exchange_code = config.getint('Extreme Battle', 'KeyExchangeCode')
 exp_exchange_npc_id = config.getint('Extreme Battle', 'ExpExchangeNpcId')
@@ -67,7 +68,7 @@ def extreme_battle():
 
         # battle
         battle_client_id = get_battle(battle_info)
-        run_battle(battle_info, battle_client_id)
+        run_battle(battle_info, battle_client_id, trump_id)
 
         # finish
         post_action('http://s1sky.gs.funmily.com/api/battles/finish.json')

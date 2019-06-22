@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 summons_sources = config.get('Summons Battle', 'SummonsSources')
 exchange_npc_id = config.getint('Summons Battle', 'ExchangeNpcId')
 units_preset = config.getint('Summons Battle', 'UnitsPreset')
+trump_id = config.getint('Summons Battle', 'TrumpId')
 
 player_id = get_player_id()
 channel = 1
@@ -53,7 +54,7 @@ def _do(field_code, enemy_code, enemy_position):
 
         # battle
     battle_client_id = get_battle(battle_info)
-    run_battle(battle_info, battle_client_id)
+    run_battle(battle_info, battle_client_id, trump_id)
 
     # finish
     post_action('http://s1sky.gs.funmily.com/api/battles/finish.json')

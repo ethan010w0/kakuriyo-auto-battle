@@ -254,7 +254,7 @@ def get_battle(battle_info):
     return match.group('client_id')
 
 
-def run_battle(battle_info, battle_client_id):
+def run_battle(battle_info, battle_client_id, trump_id=None):
     battle_id = battle_info.get('battle_id')
     player_id = battle_info.get('player_id')
     player_character = battle_info.get('player_character')
@@ -282,6 +282,10 @@ def run_battle(battle_info, battle_client_id):
             if info_type == 'sync_all':
                 ws.send('{{"channel":"/battle/{}/command","data":{{"publish_timer":{},"command_type":"start","client_id":"{}","player_id":{}}},"clientId":"{}","id":"6"}}'.format(
                     battle_id, publish_timer, client_id, player_id, battle_client_id))
+                if trump_id and trump_id != -1:
+                    ws.send('{{"channel":"/battle/{}/command","data":{{"command_type":"trump_ability","client_id":"{}","player_id":{},"trump_id":{}}},"clientId":"{}","id":"{}"}}'.format(
+                        battle_id, client_id, player_id, trump_id, battle_client_id, ws.count_id))
+                    ws.count_id += 1
             elif info_type == 'battle_finished':
                 ws.send('{{"channel":"/meta/disconnect","clientId":"{}","id":"{}"}}'.format(
                     battle_client_id, ws.count_id + 1))

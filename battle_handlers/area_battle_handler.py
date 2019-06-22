@@ -13,6 +13,7 @@ from battle_handlers import whistle
 
 area_code = config.getint('Area Battle', 'AreaCode')
 area_duration = config.getint('Area Battle', 'AreaDuration')
+trump_id = config.getint('Area Battle', 'TrumpId')
 
 
 def area_battle():
@@ -35,7 +36,7 @@ def area_battle():
 
             # battle
             battle_client_id = get_battle(battle_info)
-            run_battle(battle_info, battle_client_id)
+            run_battle(battle_info, battle_client_id, trump_id)
 
             # finish
             post_action('http://s1sky.gs.funmily.com/api/battles/finish.json')

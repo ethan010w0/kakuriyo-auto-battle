@@ -27,11 +27,11 @@ area_code = config.getint('Sublimation Battle', 'AreaCode')
 field_code = config.getint('Sublimation Battle', 'FieldCode')
 round_enemy_code = config.getint('Sublimation Battle', 'RoundEnemyCode')
 point_enemy_code = config.getint('Sublimation Battle', 'PointEnemyCode')
-
 point_enemy_position = (config.getint('Sublimation Battle', 'PointEnemyPositionX'),
                         config.getint('Sublimation Battle', 'PointEnemyPositionY'))
 round_enemy_position = (config.getint('Sublimation Battle', 'RoundEnemyPositionX'),
                         config.getint('Sublimation Battle', 'RoundEnemyPositionY'))
+trump_id = config.getint('Sublimation Battle', 'TrumpId')
 
 player_id = get_player_id()
 channel = 1
@@ -113,7 +113,7 @@ def sublimation_battle():
 
                     # battle
                     battle_client_id = get_battle(battle_info)
-                    run_battle(battle_info, battle_client_id)
+                    run_battle(battle_info, battle_client_id, trump_id)
 
                     # finish
                     post_action(
@@ -130,7 +130,7 @@ def sublimation_battle():
 
                 # battle
                 battle_client_id = get_battle(battle_info)
-                run_battle(battle_info, battle_client_id)
+                run_battle(battle_info, battle_client_id, trump_id)
 
                 # finish
                 post_action(
