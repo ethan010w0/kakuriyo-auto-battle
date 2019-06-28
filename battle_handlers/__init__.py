@@ -280,10 +280,12 @@ def run_battle(battle_info, battle_client_id, trump_id=None):
                 ws.send('{{"channel":"/battle/{}/command","data":{{"publish_timer":{},"command_type":"sync_all","client_id":"{}","player_id":{}}},"clientId":"{}","id":"5"}}'.format(
                     battle_id, publish_timer, client_id, player_id, battle_client_id))
         elif channel == '/meta/connect':
-            ws.send(
-                '{{"channel":"/meta/connect","clientId":"{}","connectionType":"websocket","id":"{}"}}'.format(
-                    battle_client_id, ws.count_id))
-            ws.count_id += 1
+            reconnect = content.get('advice').get('reconnect')
+            if reconnect == 'retry':
+                ws.send(
+                    '{{"channel":"/meta/connect","clientId":"{}","connectionType":"websocket","id":"{}"}}'.format(
+                        battle_client_id, ws.count_id))
+                ws.count_id += 1
         elif channel == player_character:
             info_type = content.get('data').get('info_type')
             if info_type == 'sync_all':
@@ -298,6 +300,10 @@ def run_battle(battle_info, battle_client_id, trump_id=None):
                     battle_client_id, ws.count_id + 1))
                 ws.send('{{"channel":"/meta/unsubscribe","clientId":"{}","subscription":"/battle/{}/info","id":"{}"}}'.format(
                     battle_client_id, battle_id, ws.count_id + 2))
+        elif channel == '/battle/{}/info'.format(battle_id):
+            data = content.get('data')
+            if data.get('info_type') == 'battle_message':
+                logger.info(u'battle_message {}'.format(data.get('info')))
 
     def on_error(ws, error):
         logger.error(error)
