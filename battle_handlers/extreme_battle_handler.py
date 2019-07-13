@@ -31,12 +31,21 @@ player_id = get_player_id()
 channel = 1
 
 
-def extreme_battle():
+def _ready():
     # enter_area
     enter_area(area_code)
 
     # move_channel
     move_channel(channel)
+
+    # move
+    move_info = get_move()
+    run_move(move_info, player_id, channel, field_code, enemy_position)
+
+
+def extreme_battle():
+    # _ready
+    _ready()
 
     while True:
         key_exchange_info = (key_exchange_npc_id, key_exchange_code)
@@ -53,17 +62,11 @@ def extreme_battle():
                 exchange_limit, require_count, has_num = get_exchange_info(
                     exchange_npc_id, exchange_code)
 
-        # move
-        move_info = get_move()
-        run_move(move_info, player_id, channel, field_code, enemy_position)
-
         # enemy_pop
         battle_info = enemy_pop(enemy_code)
         if not battle_info:
-            # enter_area
-            enter_area(area_code)
-            # move_channel
-            move_channel(channel)
+            # _ready
+            _ready()
             continue
 
         # battle

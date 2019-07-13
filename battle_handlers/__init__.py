@@ -292,9 +292,10 @@ def run_battle(battle_info, battle_client_id, trump_id=None):
                 ws.send('{{"channel":"/battle/{}/command","data":{{"publish_timer":{},"command_type":"start","client_id":"{}","player_id":{}}},"clientId":"{}","id":"6"}}'.format(
                     battle_id, publish_timer, client_id, player_id, battle_client_id))
                 if trump_id and trump_id != -1:
-                    ws.send('{{"channel":"/battle/{}/command","data":{{"command_type":"trump_ability","client_id":"{}","player_id":{},"trump_id":{}}},"clientId":"{}","id":"{}"}}'.format(
-                        battle_id, client_id, player_id, trump_id, battle_client_id, ws.count_id))
-                    ws.count_id += 1
+                    for _ in range(10):
+                        ws.send('{{"channel":"/battle/{}/command","data":{{"command_type":"trump_ability","client_id":"{}","player_id":{},"trump_id":{}}},"clientId":"{}","id":"{}"}}'.format(
+                            battle_id, client_id, player_id, trump_id, battle_client_id, ws.count_id))
+                        ws.count_id += 1
             elif info_type == 'battle_finished':
                 ws.send('{{"channel":"/meta/disconnect","clientId":"{}","id":"{}"}}'.format(
                     battle_client_id, ws.count_id + 1))
