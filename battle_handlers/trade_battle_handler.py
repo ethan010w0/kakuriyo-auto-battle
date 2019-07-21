@@ -101,7 +101,7 @@ def buy_battle():
         # get trades
         payload = {'id': exhibit_player_id}
         response = get_status(
-            'http://s1sky.gs.funmily.com/api/trades.json?id=29438', payload)
+            'http://s1sky.gs.funmily.com/api/trades.json', payload)
 
         trades = response.get('response').get('body')
         if not trades:
