@@ -191,6 +191,37 @@ def exchange(exchange_npc_id, exchange_code, count=1):
         'http://s1sky.gs.funmily.com/api/item_exchanges/exchange_item.json', payload)
 
 
+def encount():
+    response = post_action(
+        'http://s1sky.gs.funmily.com/api/battles/encount.json')
+
+    head = response.get('response').get('head')
+    if head.get('status') == 1:
+        return
+    if head.get('status') == 99:
+        # fix repeat encount
+        post_action(
+            'http://s1sky.gs.funmily.com/api/battles/finish.json')
+        time.sleep(10)
+        return
+    body = response.get('response').get('body')
+    # encount named enemy
+    if body.get('named'):
+        logger.info('wait for named enemy')
+        time.sleep(60)
+        return whistle()
+
+    battle = body.get('battle')
+    player_info = body.get('player_info')
+
+    return {
+        'battle_id': str(battle.get('id')),
+        'battle_host':  battle.get('battle_host'),
+        'player_id':  player_info.get('player_id'),
+        'player_character':  player_info.get('player').get('player_battle_ch')
+    }
+
+
 def whistle():
     response = post_action(
         'http://s1sky.gs.funmily.com/api/items/whistle.json')
@@ -202,6 +233,7 @@ def whistle():
         # fix repeat whistle
         post_action(
             'http://s1sky.gs.funmily.com/api/battles/finish.json')
+        time.sleep(10)
         return
     body = response.get('response').get('body')
     # whistle named enemy
@@ -234,6 +266,7 @@ def enemy_pop(enemy_code):
         # fix repeat enemy_pop
         post_action(
             'http://s1sky.gs.funmily.com/api/battles/finish.json')
+        time.sleep(10)
         return
 
     body = response.get('response').get('body')
